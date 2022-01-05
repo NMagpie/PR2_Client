@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-<<<<<<< HEAD
-  <component name="ProjectRootManager" version="2" default="true">
-=======
+  <component name="ProjectRootManager" version="2" default="true"/>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
@@ -11,7 +9,6 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_15" default="true" project-jdk-name="corretto-15" project-jdk-type="JavaSDK">
->>>>>>> Initial
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

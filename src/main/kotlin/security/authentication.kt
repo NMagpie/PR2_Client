@@ -6,9 +6,7 @@ import io.ktor.client.features.auth.providers.*
 import io.ktor.client.request.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
-import main.client
-import main.user
-import main.json
+import main.*
 import java.security.MessageDigest
 
 @Serializable
@@ -36,7 +34,7 @@ suspend fun login() {
     }
 
     try {
-    val response: String = client.get("http://localhost:8080/login")
+    val response: String = client.get("http://${serverAddress}:${serverPort}/login")
         user = json.decodeFromString(response)
         println("Welcome, ${user.username}!")
     } catch (e : ClientRequestException) {
