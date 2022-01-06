@@ -1,5 +1,6 @@
 package security
 
+import ftp.ftpClient
 import io.ktor.client.features.*
 import io.ktor.client.features.auth.*
 import io.ktor.client.features.auth.providers.*
@@ -10,7 +11,7 @@ import main.*
 import java.security.MessageDigest
 
 @Serializable
-data class User(val _id : String = "", var username : String = "", var password : String = "", var email : String = "")
+data class User(val _id : String = "", var username : String = "", var password : String = "", var email : String = "", var activated: Boolean = false)
 
 fun getMd5Digest(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
 
@@ -34,7 +35,7 @@ suspend fun login() {
     }
 
     try {
-    val response: String = client.get("http://${serverAddress}:${serverPort}/login")
+    val response: String = client.get("https://${serverAddress}:${serverPort}/login")
         user = json.decodeFromString(response)
         println("Welcome, ${user.username}!")
     } catch (e : ClientRequestException) {
@@ -62,4 +63,5 @@ fun logout() {
     if (auth?.providers?.size!! > 0)
         auth.providers.removeAt(0)
     user = User()
+    ftpClient.logout()
 }
