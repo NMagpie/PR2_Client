@@ -20,8 +20,7 @@ suspend fun initChat() {
                 val userInputRoutine = launch { inputMessages() }
 
                 userInputRoutine.join()
-                //messageOutputRoutine.cancelAndJoin()
-                messageOutputRoutine.join()
+                messageOutputRoutine.cancelAndJoin()
             }
         }
         client.close()
