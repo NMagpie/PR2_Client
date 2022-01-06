@@ -18,31 +18,34 @@ fun getMd5Digest(str: String): ByteArray = MessageDigest.getInstance("MD5").dige
 suspend fun login() {
     println("Performing Log In:")
     print("Username: ")
-    val username = readLine()
+    val username = readLine() as String
     print("Password: ")
-    var password = System.console()?.readPassword() ?: readLine()
+    var password = System.console()?.readPassword() ?: readLine() as String
 
-    password = getMd5Digest(password as String).toString()
+    password = String(getMd5Digest(password as String))
 
     val auth = client.feature(Auth)
     if (auth?.providers?.size!! > 0)
         auth.providers.removeAt(0)
     auth.digest {
         credentials {
-            DigestAuthCredentials(username = username as String, password = password)
+                DigestAuthCredentials(username = username, password = password)
         }
         realm = "login-user"
     }
 
+    println("$username:login-user:$password")
+    println(getMd5Digest("$username:login-user:$password"))
+
     try {
-    val response: String = client.get("https://${serverAddress}:${serverPort}/login")
+    val response: String = client.get("http://${serverAddress}:${serverPort}/login")
         user = json.decodeFromString(response)
         println("Welcome, ${user.username}!")
     } catch (e : ClientRequestException) {
         println("Invalid username/password")
+        e.printStackTrace()
         auth.providers.removeAt(0)
-        user.username = ""
-        user.password = ""
+        user = User()
     }
 }
 
