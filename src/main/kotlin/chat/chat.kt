@@ -12,7 +12,7 @@ import main.serverPort
 import main.user
 import security.tryToLogin
 
-suspend fun initChat() {
+ fun initChat() {
     if (user.username != "") {
         runBlocking {
             client.webSocket(method = HttpMethod.Get, host = serverAddress, port = serverPort, path = "/chat") {
@@ -36,7 +36,7 @@ suspend fun DefaultClientWebSocketSession.outputMessages() {
             println(receivedText)
         }
     } catch (e: Exception) {
-        println("Error while receiving: " + e.localizedMessage)
+        //println("Error while receiving: " + e.localizedMessage)
     }
 }
 

@@ -5,6 +5,7 @@ import io.ktor.client.features.*
 import io.ktor.client.features.auth.*
 import io.ktor.client.features.auth.providers.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import main.*
@@ -15,7 +16,7 @@ data class User(val _id : String = "", var username : String = "", var password 
 
 fun getMd5Digest(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
 
-suspend fun login() {
+fun login() {
     println("Performing Log In:")
     print("Username: ")
     val username = readLine() as String
@@ -34,13 +35,15 @@ suspend fun login() {
         realm = "login-user"
     }
 
-    println("$username:login-user:$password")
-    println(getMd5Digest("$username:login-user:$password"))
+/*    println("$username:login-user:$password")
+    println(getMd5Digest("$username:login-user:$password"))*/
 
     try {
-    val response: String = client.get("http://${serverAddress}:${serverPort}/login")
-        user = json.decodeFromString(response)
-        println("Welcome, ${user.username}!")
+        runBlocking {
+            val response: String = client.get("http://${serverAddress}:${serverPort}/login")
+            user = json.decodeFromString(response)
+            println("Welcome, ${user.username}!")
+        }
     } catch (e : ClientRequestException) {
         println("Invalid username/password")
         e.printStackTrace()
@@ -49,7 +52,7 @@ suspend fun login() {
     }
 }
 
-suspend fun tryToLogin() {
+fun tryToLogin() {
     var input = ""
 
     while (input.equals("y",true)||input.equals("n",true)) {
@@ -57,7 +60,7 @@ suspend fun tryToLogin() {
         input = readLine().toString()
     }
     if (input.equals("y",true))
-        login()
+        runBlocking { login() }
 }
 
 fun logout() {
@@ -67,4 +70,16 @@ fun logout() {
         auth.providers.removeAt(0)
     user = User()
     ftpClient.logout()
+}
+
+fun userInfo() {
+    if (user == User()) {
+        println("You are not logged in!")
+        return
+    }
+
+    println("Username: ${user.username}\n" +
+            "Email: ${user.email}\n" +
+            "Activated: "+ if (user.activated) "Yes" else "No")
+
 }
